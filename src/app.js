@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require("./routes/users.router");
-const userProduct = require("./routes/products.router");
+const userProducts = require("./routes/products.router");
 const app = express();
 const PORT = 8080;
 
@@ -23,4 +23,4 @@ mongoose.connect('mongodb+srv://belenbauti0310:oedEluC5OmE2Z8GR@cluster0.wunlfq4
 
 
 app.use("/api/users", userRouter)
-app.use("/api/products", userProduct);
+app.use("/api/products", userProducts);
