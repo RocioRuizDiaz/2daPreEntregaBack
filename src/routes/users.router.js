@@ -33,7 +33,7 @@ router.put("/:uid", async (req, res) => {
      res.send({result: "succes", payload: result })
 });
 router.delete("/:uid", async (req, res) => {
-    let { uid } = req.params
+    let  uid  = req.params
     let result = await userModel.deleteOne({ _id: uid })
     res.send({ result: "success", payload: result })
 
