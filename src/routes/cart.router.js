@@ -4,18 +4,18 @@ const { productsModel } = require('../models/product.model')
 const router = Router();
 
 router.get ('/', async (req, res) => {
-    const result = await cartModel.find().populate('products.products');
+    const result = await cartModel.find().populate('products');
     res.send({status: 'succes', payload: result})
 })
 
 router.get('/:cid', async (req, res) => {
     const { cid } = req.params
-    const result = await cartModel.findOne({ _id: cid }).populate('products.product')
+    const result = await cartModel.findOne({ _id: cid }).populate('products')
     res.send({ status: ' succes', payload: result })
 })
 
 router.post('/', async (req, res) => {
-    const result = await cartModel({})
+    const result = await cartModel.create({})
     res.send({ status: ' succes', payload: result})
 
 })
@@ -26,20 +26,21 @@ router.put('/:cid', async (req, res) => {
     const cart = await cartModel.findOne({ _id: cid })
 
     if(cart) {
-        const products = cart.product || []
+        const products = cart.products || []
 
-        if (products.lengt > 0){
-            const find = products.find(x => x.product == product)
+        if (products.length > 0){
+            const find = products.find(x => x.products == product)
             if(find) {
                 find.quantity++
             } else {
-                products.push ({ product, quantity: 1})
+                products.push ({ products: product, quantity: 1})
             }
         }else {
-            product.push({ product, quantity: 1})
+            products.push({ products: product, quantity: 1})
         }
 
-        await cartsModel.updateOne({ _id: cid }, { products })
+        cart.products = products
+        await cart.save()
         res.send({ status: 'status', payload: cart })
     } else res.status(404).json({ message: ' carrito no encontado'})
 })
@@ -51,11 +52,12 @@ router.put('/:cid/products/:pid', async ( req, res) => {
     const cart = await cartModel.findOne({ _id: cid})
     if (cart) {
         const products = cart.products
-        const find = products.find(x => x.product == pid)
+        const find = products.find(x => x.products == pid)
 
         if (find) {
             find.quantity = quantity || find.quantity + 1
-            await cartModel.updateOne({ _id: cid }, { products })
+            cart.products = products
+            await cart.save()
             res.send({ status: 'success', payload: cart })
         } else {
             const product = await productsModel.findOne({ _id: pid })
@@ -64,14 +66,15 @@ router.put('/:cid/products/:pid', async ( req, res) => {
                 res.status(404).json({ message: 'Producto no encontrado' })
             }
 
-            products.push({ product: product.id, quantity: quantity || 1})
+            products.push({ products: product.id, quantity: quantity || 1})
+            cart.products = products
+            await cart.save()
             res.send({ status: 'subir producto al carrito', payload: cart })
         }
-
-        await cart.save()
     } else res.status( 404 ).json({ message:'Carrito no encontrado'})
 
 })
+
 
 router.delete ('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params
@@ -80,7 +83,7 @@ router.delete ('/:cid/products/:pid', async (req, res) => {
     if (cart.length > 0) {
         const products = cart[0].products
         if (products.length > 0) {
-          const result = products.filter(x => x.product != pid)
+          const result = products.filter(x => x.products != pid)
           await cartModel.updateOne({ _id: cid }, { products: result })
           res.send({ status: 'product deleted', payload: cart })
         } else {
@@ -94,9 +97,9 @@ router.delete('/:cid', async (req, res) => {
     const cart = await cartModel.find({ _id: cid })
   
     if (cart.length > 0) {
-      await cartsModel.updateOne({ _id: cid }, { products: [] })
-      res.send({ status: 'product deleted', payload: cart })
-    } else res.status(404).json({ message: 'Cart not found' })
+      await cartModel.updateOne({ _id: cid }, { products: [] })
+      res.send({ status: 'producto borrado', payload: cart })
+    } else res.status(404).json({ message: 'Cart no encontrado' })
   })
 
 module.exports = router;

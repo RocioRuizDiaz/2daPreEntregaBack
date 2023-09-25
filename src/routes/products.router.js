@@ -12,7 +12,7 @@ router.get("/", async(req,res) =>{
         if(category){
             query.category = category;
         }
-        let productsQuery = productsModel.find(query);
+         let productsQuery = productsModel.find(query);
         if (sort) {
             productsQuery = productsQuery.sort(sort);
         }
