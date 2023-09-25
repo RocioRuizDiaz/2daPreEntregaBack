@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { productsModel } = require("../models/products.model");
+const { productsModel } = require("../models/product.model");
 
 
 const router = Router();
@@ -8,6 +8,7 @@ const router = Router();
 router.get("/", async(req,res) =>{
     try {
         const { sort, category, limit } =req.query
+        const query = {};
         if(category){
             query.category = category;
         }
@@ -27,31 +28,30 @@ router.get("/", async(req,res) =>{
         res.send({status: error, error: "Error al obtener informacion."});
     }
 });
-router.post("/", async (req, res) => {
-    let {  id, title, stock, category, price, thumbnail } = req.body;
-    if (!id || !title || !stock || !category || !price || !thumbnail) {
-    res.send({ status: "error", error: "Falta parametro"});
-   
-    
-    }
 
-    let result = await productsModel.create({title, stock, category, price, thumbnail })
-    res.send({result: "succes", payload: result });
-    
-})
-router.put("/:pid", async (req, res) => {
-    let { pid } = req.params;
-
-    let productToReplace = req.body; 
-     if (!id || !title || !stock || !category || !price || !thumbnail){
-        res.send({ status: "error", error: "Falta parametro"});
-    }
-     let result = await productsModel.updateOne({ _id: pid}, productToReplace);
-     res.send({result: "succes", payload: result })
-});
-router.delete("/:pid", async (req, res) => {
-    let pid= req.params
-    let result = await productsModel.deleteOne({ _id: pid })
+router.post('/', async (req, res) => {
+    const { title, category,  price, stock, image  } = req.body
+  
+    const result = await productsModel.create({
+      title,
+      category,
+      price,
+      stock,
+      image
+    })
+    res.send({ status: 'success', payload: result })
+  })
+  router.put('/:pid', async (req, res) => {
+    const { pid } = req.params
+    const { stock } = req.body
+    if (stock < 0) return res.send({ status: 'error', error: 'Incomplete values' })
+    const result = await productsModel.updateOne({ _id: pid }, { stock })
+    res.send({ status: 'success', payload: result })
+  })
+ 
+router.delete('/:pid', async (req, res) => {
+    const { pid } = req.params
+    const result = await productsModel.deleteOne({ _id: pid })
     res.send({ result: "success", payload: result })
 
 });

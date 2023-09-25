@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRouter = require("./routes/users.router");
 const productsRouter = require("./routes/products.router");
 const cartRouter = require("./routes/cart.router")
 const app = express();
@@ -23,6 +22,5 @@ mongoose.connect('mongodb+srv://belenbauti0310:oedEluC5OmE2Z8GR@cluster0.wunlfq4
 
 
 
-app.use("/api/users", userRouter)
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartRouter)
+app.use('/api/products', productsRouter);
+app.use('/api/cart', cartRouter)
