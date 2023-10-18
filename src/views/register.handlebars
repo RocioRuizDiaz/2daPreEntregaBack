@@ -1,18 +1,30 @@
-<form method="POST" action="register">
-    <label for="first_name">First Name</label>
-    <input type="text" name="first_name" required>
+<h1>Sign Up</h1>
 
-    <label for="last_name">Last Name</label>
-    <input type="text" name="last_name" required>
+<div>
+  <a href='/api/sessions/github'> <button>Registrarse con GitHub</button> </a>
+</div>
 
-    <label for="email">Email</label>
-    <input type="email" name="email" required>
+ <form method='post' action='/api/sessions/register'>
+  <div style='display: block;'>
+    <label for='first_name'>First Name</label>
+    <input type='text' name='firstName' required />
+  </div>
+  <div style='display: block;'>
+    <label for='lastName'>Last Name</label>
+    <input type='text' name='lastName' required />
+  </div>
+  <div style='display: block;'>
+    <label for='email'>Email</label>
+    <input type='email' name='email' required />
+  </div>
+  <div style='display: block;'>
+    <label for='age'>Age</label>
+    <input type='number' name='age' required />
+  </div>
 
-    <label for="age">Age</label>
-    <input type="number" name="age" required>
-
-    <label for="password">Password</label>
-    <input type="password" name="password" required>
-
-    <button type="submit">Register</button>
+  <div style='display: block;'>
+    <label for='password'>Password</label>
+    <input type='password' name='password' required />
+  </div>
+  <button type='submit'>Register</button>
 </form>

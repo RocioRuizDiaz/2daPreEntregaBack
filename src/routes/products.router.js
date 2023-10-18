@@ -21,7 +21,7 @@ router.get("/", async(req,res) =>{
             productsQuery = productsQuery.limit(parseInt(limit));
         }
 
-        const products = await productsQuery.exec();
+        const products = await productsQuery;
         res.send({result: "sucess", payload: products });
         
     } catch (error){
@@ -30,9 +30,12 @@ router.get("/", async(req,res) =>{
 });
 
 router.post('/', async (req, res) => {
-    const { title, category,  price, stock, image  } = req.body
-  
+    const { id, title, category,  price, stock, image  } = req.body
+    if (!id || !title || !category ||  !price || !stock || !image){
+        res.send({ status: error, error: "Faltan parámetros"})
+    }
     const result = await productsModel.create({
+      id,
       title,
       category,
       price,
@@ -41,11 +44,15 @@ router.post('/', async (req, res) => {
     })
     res.send({ status: 'success', payload: result })
   })
+
   router.put('/:pid', async (req, res) => {
-    const { pid } = req.params
-    const { stock } = req.body
-    if (stock < 0) return res.send({ status: 'error', error: 'Incomplete values' })
-    const result = await productsModel.updateOne({ _id: pid }, { stock })
+    let { pid } = req.params
+    let productToReplace = req.body
+
+    if ((!id || !title || !category ||  !price || !stock || !image)){
+        res.send({ status: error, error: "Faltan parámetros" })
+    }
+    const result = await productsModel.updateOne({ _id: pid }, productToReplace)
     res.send({ status: 'success', payload: result })
   })
  
