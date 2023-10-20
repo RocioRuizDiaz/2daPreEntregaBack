@@ -1,15 +1,20 @@
-<h1>Login</h1>
-<div>
-  <a href='/api/sessions/github'> <button>Entrar con GitHub</button> </a>
-</div>
 
-{{!-- <h3>{{error}}</h3> --}}
-{{! <form action='/api/sessions/login' method='post'>
-  <label for='email'>Email</label>
-  <input type='text' name='email' />
+<h3>Welcome, please login</h3>
 
-  <label for='password'>Password</label>
-  <input type='password' name='password' />
+<form action='/api/sessions/login' method='POST'>
 
-  <button type='submit'>Login</button>
-</form> }}
+<div style='display: block;'></div>
+    <label for='email'>Email</label>
+    <input type='email' name='email' required>
+  </div>
+
+<div style='display: block;'></div>
+    <label for='password'>Password</label>
+    <input type='password' name='password' required>
+  </div>
+
+<div style='display: block;'></div>
+    <button type='submit'>Login</button>
+    <a href="/restore">Restore to password</a>
+  </div>
+</form>

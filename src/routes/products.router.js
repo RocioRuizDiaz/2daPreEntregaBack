@@ -32,7 +32,7 @@ router.get("/", async(req,res) =>{
 router.post('/', async (req, res) => {
     const { id, title, category,  price, stock, image  } = req.body
     if (!id || !title || !category ||  !price || !stock || !image){
-        res.send({ status: error, error: "Faltan parámetros"})
+        res.send({status: error, error: "Faltan parámetros"})
     }
     const result = await productsModel.create({
       id,

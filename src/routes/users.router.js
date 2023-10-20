@@ -1,9 +1,15 @@
 const express = require("express");
-const { usersModel } = require("../models/users.model.js");
-const jwt = require ('jsonwebtoken')
+const usersModel  = require("../models/users.model.js");
 const { createHash, isValidatePassword} = require ('../../utils')
 const passport = require ('passport')
+const jwt = require ('jsonwebtoken')
 const router = express.Router();
+
+
+router.get("/login", async(req, res) => {
+    res.render("login")
+})
+
 
 router.get("/", async(req,res) =>{
     try{
@@ -15,26 +21,44 @@ router.get("/", async(req,res) =>{
     }
 });
 
-router.get("/login", async(req, res) => {
-    res.render("login")
-})
+router.get("profile", async (req, res) => {
+    if(!req.session.user) {
+        return res.redirect("login");
+    }
+
+    const { first_name, last_name, email, age } = req.session.user;
+
+    res.render("profile", { first_name, last_name, age, email });
+});
 
 
 router.post("/", async (req, res) => {
-    let { nombre, apellido, correo } = req.body;
-    if (!nombre || !apellido || !correo) {
+    let { first_name, last_name, email, password  } = req.body;
+    if (!first_name || !last_name ||  !email || !password) {
     res.send({ status: "error", error: "Falta parametro"});
     } 
     
-    let result = await usersModel.create({nombre, apellido, correo});
+    let result = await usersModel.create({first_name, last_name, email, password});
     res.send({result: "succes", payload: result })
     
+    if(!user) {
+        return res.status(400).render("login", { error: "Error en password" })
+    }
+
+    res.redirect("/api/usuarios/profile");
 })
+
+router.get("/logout", async (req, res) => {
+    delete req.session.user;
+    res.redirect("login");
+  });
+
+
 router.put("/:uid", async (req, res) => {
     let { uid } = req.params;
 
     let userToReplace = req.body; 
-     if (!userToReplace.nombre || !userToReplace.apellido || !userToReplace.correo){
+     if (!userToReplace.first_name || !userToReplace.last_name || !userToReplace.email){
         res.send({ status: "error", error: "Falta parametro"});
     }
      let result = await usersModel.updateOne({ _id: uid}, userToReplace);
@@ -47,7 +71,7 @@ router.delete("/:uid", async (req, res) => {
 
 });
 
-router.get("/failregister", (req, res) =>{
+router.get("/faillogin", (req, res) =>{
     console.log("Error de auntenticacion")
     res.send({error: "Error de auntenticacion"})
 })
@@ -73,4 +97,4 @@ router.get("/current", passport.authenticate( "jwt", {session: false}), (req, re
 
 
 
-module.exports = router
+module.exports = router;

@@ -1,26 +1,14 @@
-<html lang='es'>
-  <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>{{title}}</title>
-  </head>
-  <body>
-    <header style='margin-bottom: 2rem;'>
-      <h1>Menu</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-      {{#if session}}
-        <h3> Welcome {{session.email}}</h3>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
 
-        <a href='products'>Products</a>
-        <a href='profile'>Profile</a>
-        <a href='logout'>Logout</a>
-      {{else}}
-        <a href='register'>Sign Up</a>
-        <a href='login'>Login</a>
-      {{/if}}
-    </header>
-
+<body>
     {{{body}}}
+</body>
 
-  </body>
 </html>
